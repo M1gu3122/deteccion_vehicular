@@ -1,0 +1,35 @@
+description: Ultralytics YOLO11n-cls model trained on C:\Users\mglmo\OneDrive - Unibarranquilla\Desktop\Deteccion
+  Vehicular\dataset_autos_v2
+author: Ultralytics
+date: '2026-11-01T19:22:21.759147-05:00'
+version: 8.4.191
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 1
+task: classify
+head: Classify
+batch: 1
+imgsz:
+- 224
+- 224
+names:
+  0: kia_amanti
+  1: kia_forte
+  2: kia_optima
+  3: kia_picanto
+  4: kia_rio
+  5: kia_sedona
+  6: kia_sephia
+  7: kia_sorento
+  8: kia_soul
+  9: kia_spectra
+  10: kia_sportage
+args:
+  data: null
+  batch: 1
+  fraction: 1.0
+  quantize: null
+  nms: null
+  dynamic: false
+channels: 3
+end2end: false

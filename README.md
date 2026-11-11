@@ -2,6 +2,30 @@
 
 Clasificacion de 11 modelos Kia, deteccion de vehiculos y placas, OCR y zonas de video.
 
+## Instalar en otro equipo (Windows)
+
+Instala Git y Python 3.12 de 64 bits. Las versiones de referencia son las del equipo original (Python 3.12.10); no se ha comprobado una instalacion limpia en otros sistemas.
+
+```powershell
+git clone https://github.com/M1gu3122/deteccion_vehicular.git
+cd deteccion_vehicular
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe verificar_instalacion.py
+```
+
+Los pesos del proyecto, exportaciones OpenVINO y `runs/auto_cls_v2/` estan incluidos en Git. No necesitas copiar `myvenv/` ni entrenar de nuevo. La primera lectura OCR necesita Internet para descargar sus dos modelos PaddleOCR; despues se reutiliza la cache local. Esta configuracion ejecuta la inferencia en CPU; no exige una GPU.
+
+Para analizar una imagen o video propio:
+
+```powershell
+.\.venv\Scripts\python.exe analizar_vehiculo.py "C:\fotos\mi_kia.jpg" --salida resultados/prueba1 --mostrar
+.\.venv\Scripts\python.exe analizar_vehiculo.py "C:\videos\mi_kia.mp4" --salida resultados/prueba2 --mostrar
+```
+
+Cada salida debe ser una carpeta nueva. Las fotos, videos y datasets no se incluyen: usa archivos de tu equipo. Para los descargadores instala tambien `requirements-descargas.txt`. Para entrenar o evaluar necesitas obtener el dataset por separado; los checkpoints y registros no sustituyen las imagenes de entrenamiento. `requeriments.txt` se mantiene como alias del archivo de dependencias correctamente escrito.
+
 ## Modelos necesarios
 
 - `modelos/auto_cls_v2.pt`: clasificador propio de 11 modelos Kia. Su exportacion `auto_cls_v2_openvino_model/` acelera la inferencia.

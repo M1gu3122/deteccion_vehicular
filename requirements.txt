@@ -1,0 +1,9 @@
+# Runtime versions used with Windows x64 / Python 3.12.10.
+ultralytics==8.4.191
+torch==2.15.0
+torchvision==0.29.2
+opencv-python==5.0.0.93
+numpy==2.3.5
+openvino==2026.4.1
+paddleocr==3.7.0
+paddlepaddle==3.3.1

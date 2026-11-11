@@ -1,0 +1,4 @@
+-r requirements.txt
+requests==2.34.2
+pyarrow==26.0.0
+huggingface-hub==2.3.0

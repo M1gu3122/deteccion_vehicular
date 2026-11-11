@@ -36,3 +36,17 @@ deteccion_vehicular/
 
 # Local conversation notes
 codex-session.md
+
+# Shared inference weights and exports
+!modelos/auto_cls_v2.pt
+!modelos/best.pt
+!modelos/auto_cls_v2_openvino_model/
+!modelos/auto_cls_v2_openvino_model/**
+!modelos/best_openvino_model/
+!modelos/best_openvino_model/**
+
+# Share this completed training run only
+!runs/
+runs/*
+!runs/auto_cls_v2/
+!runs/auto_cls_v2/**
