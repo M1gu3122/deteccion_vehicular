@@ -41,8 +41,7 @@ def normalizar_placa(texto):
     Convierte el texto a mayusculas y conserva
     unicamente letras y numeros.
     """
-    texto = texto.upper()
-    return re.sub(r"[^A-Z0-9]", "", texto)
+    return LectorOCR.normalizar(texto)
 
 
 def reconocer_placas(ruta_imagen):

@@ -33,3 +33,6 @@ runs/
 *.restaurar_bak
 *.bak
 deteccion_vehicular/
+
+# Local conversation notes
+codex-session.md

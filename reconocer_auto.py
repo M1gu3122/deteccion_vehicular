@@ -21,8 +21,6 @@ BASE_DIR = Path(__file__).resolve().parent
 MODELOS_DIR = BASE_DIR / "modelos"
 
 MODELO_CLASIFICACION = MODELOS_DIR / "auto_cls_v2.pt"
-if not MODELO_CLASIFICACION.exists():
-    MODELO_CLASIFICACION = MODELOS_DIR / "auto_cls.pt"
 
 MODELO_DETECCION = MODELOS_DIR / "best.pt"
 
@@ -41,8 +39,8 @@ CLASES_KIA = [
 ]
 
 try:
-    from paddleocr import PaddleOCR
-    ocr = PaddleOCR(use_angle_cls=True, lang='es', show_log=False)
+    from lector_ocr import LectorOCR
+    ocr = LectorOCR()
     OCR_DISPONIBLE = True
 except ImportError:
     OCR_DISPONIBLE = False
@@ -63,7 +61,7 @@ def predecir_marca_modelo(imagen, conf_min=0.45):
         confianza = float(resultado.probs.top1conf)
         if confianza < conf_min:
             return None
-        return CLASES_KIA[idx], confianza
+        return clasificador.names[idx], confianza
     except Exception as e:
         print(f"⚠️ Error en clasificación: {e}")
         return None
@@ -110,20 +108,7 @@ def ocr_placa(imagen_corte):
     if not OCR_DISPONIBLE:
         return None
     try:
-        # Redimensionar para OCR si es muy grande
-        k = min(1024 / imagen_corte.shape[1], 1024 / imagen_corte.shape[0])
-        k = max(k, 0.5)
-        nueva_dim = (int(imagen_corte.shape[1] * k), int(imagen_corte.shape[0] * k))
-        placa_pequeña = cv2.resize(imagen_corte, nueva_dim, interpolation=cv2.INTER_AREA)
-
-        resultado_ocr = ocr.ocr(placa_pequeña, cls=True)
-        if resultado_ocr and resultado_ocr[0]:
-            # resultado_ocr[0] es lista de [ [coords], (texto, conf) ]
-            texto_info = resultado_ocr[0][0][1]
-            texto = "".join(c for c in str(texto_info) if c.isalnum() or c in " -")
-            placa_limpia = texto.strip()[:15]
-            if placa_limpia:
-                return placa_limpia
+        return ocr.leer(imagen_corte)["placa_normalizada"] or None
     except Exception as e:
         print(f"⚠️ Error OCR: {e}")
     return None
@@ -163,7 +148,7 @@ def predecir_marca_modelo(imagen, conf_min=0.45):
         confianza = float(resultado.probs.top1conf)
         if confianza < conf_min:
             return None
-        return CLASES_KIA[idx], confianza
+        return clasificador.names[idx], confianza
     except Exception as e:
         print(f"⚠️ Error en clasificación: {e}")
         return None

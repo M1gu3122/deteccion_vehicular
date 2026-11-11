@@ -21,8 +21,18 @@ class LectorOCR:
 
     @staticmethod
     def normalizar(texto):
-        texto = texto.upper()
-        return re.sub(r"[^A-Z0-9]", "", texto)
+        """Extrae una matricula de auto de tres letras y tres numeros.
+
+        Descarta ciudad y otras leyendas. No inventa caracteres si la
+        lectura es incompleta o contiene dos matriculas distintas.
+        """
+        candidatos = re.findall(
+            r"(?<![A-Z0-9])[A-Z]{3}[\s.-]*[0-9]{3}(?![0-9])",
+            texto.upper(),
+        )
+        placas = {re.sub(r"[^A-Z0-9]", "", candidato)
+                  for candidato in candidatos}
+        return placas.pop() if len(placas) == 1 else ""
 
     @staticmethod
     def _extraer_datos(resultado):
@@ -43,7 +53,8 @@ class LectorOCR:
             confianzas.extend(datos.get("rec_scores", []))
 
         texto_original = "".join(textos).upper()
-        texto_limpio = self.normalizar(texto_original)
+        # Mantener los limites de bloques evita unir ciudad y matricula.
+        texto_limpio = self.normalizar(" ".join(textos))
 
         return {
             "texto_original": texto_original,

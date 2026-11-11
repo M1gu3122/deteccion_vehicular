@@ -9,11 +9,11 @@ from zonas import cargar_zona
 BASE_DIR = Path(__file__).resolve().parent
 VIDEO_PATH = BASE_DIR / "videos" / "salida.webm"
 
-# Modelo YOLO preentrenado.
-MODELO = "yolo11n.pt"
+# Detector local: clase 1 = vehiculo.
+MODELO = BASE_DIR / "modelos" / "best.pt"
 
-# Clase 2 del conjunto COCO: car (automóvil).
-CLASE_AUTOMOVIL = 2
+# Detector local: clase 1 = vehiculo.
+CLASE_AUTOMOVIL = 1
 CONFIANZA_MINIMA = 0.40
 
 
@@ -34,7 +34,9 @@ def main():
 
     poligono = np.array(datos_zona["puntos"], dtype=np.int32)
 
-    modelo = YOLO(MODELO)
+    if not MODELO.is_file():
+        raise FileNotFoundError(f"Falta el detector local: {MODELO}")
+    modelo = YOLO(str(MODELO))
     video = cv2.VideoCapture(str(VIDEO_PATH))
 
     if not video.isOpened():

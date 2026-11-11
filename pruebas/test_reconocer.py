@@ -21,4 +21,3 @@ for ruta in pruebas:
     else:
         nombre = ruta.split("\\")[-1]
         print(f'{nombre:35s} -> SIN CLASIFICAR')
-" 2>&1

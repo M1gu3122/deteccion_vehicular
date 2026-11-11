@@ -44,8 +44,6 @@ def main():
     ruta_modelo = Path(args.modelo)
 
     if not ruta_modelo.exists():
-        ruta_modelo = MODELOS_DIR / "auto_cls.pt"
-    if not ruta_modelo.exists():
         print(f"No se encontro el modelo: {args.modelo}")
         return
 

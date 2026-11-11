@@ -3,6 +3,7 @@ Reconoce marca/modelo de un vehículo en una imagen.
 Usa modelos/auto_cls_v2.pt para clasificación.
 """
 import argparse
+import sys
 from pathlib import Path
 
 import cv2
@@ -42,7 +43,7 @@ def predecir_marca_modelo(imagen, conf_min=0.45):
         confianza = float(resultado.probs.top1conf)
         if confianza < conf_min:
             return None
-        return CLASES_KIA[idx], confianza
+        return clasificador.names[idx], confianza
     except Exception as e:
         print(f"⚠️ Error en clasificación: {e}")
         return None

@@ -25,7 +25,8 @@ def main():
     parser = argparse.ArgumentParser(
         description="Entrena el clasificador Kia con parametros corregidos."
     )
-    parser.add_argument("--modelo", default="yolo11n-cls.pt")
+    parser.add_argument("--modelo", default=str(MODELOS_DIR / "auto_cls_v2.pt"),
+                        help="Checkpoint local o yolo11n-cls.yaml para entrenar desde cero.")
     parser.add_argument("--epochs", type=int, default=150)
     parser.add_argument("--imgsz", type=int, default=224)
     parser.add_argument("--batch", type=int, default=16)
@@ -37,7 +38,7 @@ def main():
     parser.add_argument("--warmup-epochs", type=float, default=3.0)
     parser.add_argument("--close-mosaic", type=int, default=15)
     parser.add_argument("--cache", default="ram", choices=["ram", "disk", "False"])
-    parser.add_argument("--nombre", default="auto_cls_v2")
+    parser.add_argument("--nombre", default="auto_cls_nuevo")
     parser.add_argument("--solo-comando", action="store_true",
                         help="Muestra el comando sin ejecutarlo.")
     args = parser.parse_args()
@@ -111,6 +112,12 @@ def main():
     print("=" * 74 + "\n")
 
     inicio = time.time()
+    ruta_modelo = Path(args.modelo)
+    if ruta_modelo.suffix == ".pt" and not ruta_modelo.is_file():
+        raise FileNotFoundError(f"Falta el checkpoint local: {ruta_modelo}")
+    destino = MODELOS_DIR / f"{args.nombre}.pt"
+    if destino.exists():
+        raise FileExistsError(f"Elige otro --nombre para conservar {destino}")
     modelo = YOLO(args.modelo)
     modelo.train(**argumentos)
 
@@ -134,24 +141,14 @@ def main():
 
     print(f"OpenVINO listo en: {destino_ov}")
 
-    # --------------------------------------------- activar el modelo nuevo
-    clasificador = BASE_DIR / "clasificador_vehiculo.py"
-    if clasificador.exists():
-        texto = clasificador.read_text(encoding="utf-8")
-        if f'MODELO_CLASIFICADOR = MODELOS_DIR / "{args.nombre}.pt"' not in texto:
-            texto = texto.replace(
-                'MODELO_CLASIFICADOR = MODELOS_DIR / "auto_cls.pt"',
-                f'MODELO_CLASIFICADOR = MODELOS_DIR / "{args.nombre}.pt"'
-            )
-            clasificador.write_text(texto, encoding="utf-8")
-            print(f"clasificador_vehiculo.py ahora usa {args.nombre}.pt")
+    print("Para activar el resultado, actualiza MODELO_CLASIFICADOR en clasificador_vehiculo.py")
 
     fin = time.time()
     print(f"\nTiempo total: {(fin - inicio)/60:.1f} minutos")
 
     print("\n" + "=" * 74)
     print("LISTO. Ahora evalua el modelo:")
-    print("  python evaluar_modelo.py")
+    print(f"  python evaluar_modelo.py --modelo modelos/{args.nombre}.pt")
     print("=" * 74)
 
 
