@@ -1,0 +1,35 @@
+# Python environments and caches
+myvenv/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Credentials and local settings
+.env
+.env.*
+!.env.example
+.aws/
+.codex/
+.agents/
+
+# Datasets, media, weights and generated results
+dataset_autos*/
+imagenes/
+videos/
+resultados/
+runs/
+*_openvino_model/
+*.pt
+*.onnx
+*.jpg
+*.jpeg
+*.png
+*.mp4
+*.avi
+
+# Local backups and nested empty clone
+*.restaurar_bak
+*.bak
+deteccion_vehicular/
